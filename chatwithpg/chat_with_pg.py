@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from langchain_chroma import Chroma
+from langchain_openai import ChatOpenAI
 
 from populate_db import CHROMA_PATH
 from utils import get_embedding_function, MODEL
@@ -37,7 +38,14 @@ def query_rag(query_text: str):
     prompt = prompt_template.format(context=context_text, question=query_text)
     # print(prompt)
 
-    model = ChatOllama(model=MODEL, temperature=0)
+    # model = ChatOllama(model=MODEL, temperature=0)
+    model = ChatOpenAI(
+        model="gpt-4o",
+        temperature=0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2
+    )
     response_text = model.invoke(prompt)
 
     sources = [doc.metadata.get("id", None) for doc, _score in results]
